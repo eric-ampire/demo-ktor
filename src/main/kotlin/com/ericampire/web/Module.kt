@@ -7,11 +7,14 @@ import io.ktor.application.install
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
+import io.ktor.gson.GsonConverter
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
 import io.ktor.http.parametersOf
 import io.ktor.jackson.JacksonConverter
 import io.ktor.request.receive
+import io.ktor.request.receiveOrNull
+import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
@@ -34,10 +37,7 @@ fun Application.module() {
     }
 
     install(ContentNegotiation) {
-        gson {
-            setDateFormat(DateFormat.LONG)
-            setPrettyPrinting()
-        }
+        register(ContentType.Application.FormUrlEncoded, JacksonConverter())
     }
 
     install(Routing) {
@@ -47,9 +47,13 @@ fun Application.module() {
         }
 
         post("/save") {
-            val postedUser = call.receive<User>()
+            val params = call.receiveParameters()
+            val postedUser = User(
+                firstName = params["firstName"] ?: "Undefined",
+                lastName = params["lastName"] ?: "Undefined",
+                email = params["email"] ?: "Undefined"
+            )
             val successPage = ThymeleafContent("success", mapOf("name" to postedUser.firstName))
-            System.err.println(postedUser.email)
             call.respond(successPage)
         }
     }
