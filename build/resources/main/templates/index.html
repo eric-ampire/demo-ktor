@@ -1,0 +1,31 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <h2 th:text="Hello"></h2>
+
+        <form method="post" th:method="post" th:action="@{save}" th:object="${user}">
+            <div class="form-group">
+                <label class="control-label">Firstname</label>
+                <input class="form-control" type="text" th:field="*{firstName}"/>
+                <span></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Last name</label>
+                <input class="form-control" type="date" th:field="*{lastName}"/>
+                <span></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input class="form-control" type="text" th:field="*{email}"/>
+                <span></span>
+            </div>
+
+            <div class="form-group">
+                <button class="form-control btn-primary" type="submit">Save</button>
+                <span></span>
+            </div>
+        </form>
+    </body>
+</html>
